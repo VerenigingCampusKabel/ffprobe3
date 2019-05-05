@@ -10,8 +10,8 @@ setup(
     author_email='simon@simon-hargreaves.com',
     maintainer='Vereniging Campus Kabel',
     maintainer_email='info@vck.utwente.nl',
-    url='https://github.com/VerenigingCampusKabel/ffprobe3',
-    packages=['pyffprobe3'],
+    url='https://github.com/VerenigingCampusKabel/pyffprobe',
+    packages=['pyffprobe'],
     keywords='ffmpeg, ffprobe, mpeg, mp4',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
