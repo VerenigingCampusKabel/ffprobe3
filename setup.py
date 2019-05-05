@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name='pyffprobe',
-    version='1.0.0',
+    version='1.0.1',
     description="A wrapper around ffprobe command to extract metadata from media files.",
     author='Simon Hargreaves',
     author_email='simon@simon-hargreaves.com',
