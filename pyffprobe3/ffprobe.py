@@ -23,49 +23,46 @@ class FFProbe:
                 subprocess.check_call(["ffprobe", "-h"], stdout=tempf, stderr=tempf)
         except:
             raise IOError('ffprobe not found.')
-        if os.path.isfile(video_file):
-            if str(platform.system()) == 'Windows':
-                cmd = ["ffprobe", "-show_streams", self.video_file]
-            else:
-                cmd = ["ffprobe -show_streams " + pipes.quote(self.video_file)]
-
-            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-            self.format = None
-            self.created = None
-            self.duration = None
-            self.start = None
-            self.bitrate = None
-            self.streams = []
-            self.video = []
-            self.audio = []
-            data_lines = []
-            for a in iter(p.stdout.readline, b''):
-                a = a.decode('UTF-8')
-                if re.match(r'\[STREAM\]', a):
-                    data_lines = []
-                elif re.match(r'\[/STREAM\]', a):
-                    self.streams.append(FFStream(data_lines))
-                    data_lines = []
-                else:
-                    data_lines.append(a)
-            for a in iter(p.stderr.readline, b''):
-                a = a.decode('UTF-8')
-                if re.match(r'\[STREAM\]', a):
-                    data_lines = []
-                elif re.match(r'\[/STREAM\]', a):
-                    self.streams.append(FFStream(data_lines))
-                    data_lines = []
-                else:
-                    data_lines.append(a)
-            p.stdout.close()
-            p.stderr.close()
-            for a in self.streams:
-                if a.is_audio():
-                    self.audio.append(a)
-                if a.is_video():
-                    self.video.append(a)
+        if str(platform.system()) == 'Windows':
+            cmd = ["ffprobe", "-show_streams", self.video_file]
         else:
-            raise IOError('No such media file ' + video_file)
+            cmd = ["ffprobe -show_streams " + pipes.quote(self.video_file)]
+
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        self.format = None
+        self.created = None
+        self.duration = None
+        self.start = None
+        self.bitrate = None
+        self.streams = []
+        self.video = []
+        self.audio = []
+        data_lines = []
+        for a in iter(p.stdout.readline, b''):
+            a = a.decode('UTF-8')
+            if re.match(r'\[STREAM\]', a):
+                data_lines = []
+            elif re.match(r'\[/STREAM\]', a):
+                self.streams.append(FFStream(data_lines))
+                data_lines = []
+            else:
+                data_lines.append(a)
+        for a in iter(p.stderr.readline, b''):
+            a = a.decode('UTF-8')
+            if re.match(r'\[STREAM\]', a):
+                data_lines = []
+            elif re.match(r'\[/STREAM\]', a):
+                self.streams.append(FFStream(data_lines))
+                data_lines = []
+            else:
+                data_lines.append(a)
+        p.stdout.close()
+        p.stderr.close()
+        for a in self.streams:
+            if a.is_audio():
+                self.audio.append(a)
+            if a.is_video():
+                self.video.append(a)
 
 
 class FFStream:
